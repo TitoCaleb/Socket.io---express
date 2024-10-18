@@ -6,12 +6,11 @@
     <title>¡Servidor con Express y Socket!</title>
   </head>
   <body>
-    <h1>Funciona</h1>
+    <h1>Chat de <span id="namespace"></span></h1>
 
-    <p id="text"></p>
-    <button id="emit-to-server">Message to server 😝</button>
+    <ul id="chat"></ul>
 
-    <button id="emit-to-last">Saluda al ultimo conectado</button>
+    <button id="send_message">Enviar mensaje</button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/index.js"></script>

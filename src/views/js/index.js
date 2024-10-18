@@ -1,53 +1,22 @@
-const socket = io();
+/* const socket = io(); */ //Esto conecta al namespace por defecto
 
-socket.on("welcome_message", (data) => {
-  document.getElementById("text").innerText = data;
+const user = prompt("Enter your user");
+
+const teachers = ["teacher1", "teacher2", "teacher3"];
+
+let socketNamespace, group;
+
+const namespace = document.getElementById("namespace");
+const chat = document.getElementById("chat");
+
+if (teachers.includes(user)) {
+  socketNamespace = io("/teachers"); // Conecta al namespace teachers
+  group = "teachers";
+} else {
+  socketNamespace = io("/students"); // Conecta al namespace students
+  group = "students";
+}
+
+socketNamespace.on("connect", () => {
+  namespace.textContent = group;
 });
-
-const emitToServer = document.querySelector("#emit-to-server");
-emitToServer.addEventListener("click", () => {
-  socket.emit("client_message", "¡Hola, servidor! 😎");
-});
-
-const emitToLast = document.querySelector("#emit-to-last");
-emitToLast.addEventListener("click", () => {
-  socket.emit("message_to_last", "¡Hola, has entrado al ultimo! 😎");
-});
-
-socket.on("send_message_to_last", (data) => {
-  console.log(data);
-});
-
-socket.on("everyone", (data) => {
-  console.log(data);
-});
-
-socket.on("on", () => {
-  console.log("[ON] Evento que se emite varias veces");
-});
-
-socket.once("once", () => {
-  console.log("[ONCE] Evento que se emite una sola vez");
-});
-
-//? Eventos de estado que se pueden escuchar
-// function checkSocketStatus() {
-//     console.log("Estado del socket:", socket.connected);
-//   }
-// socket.on("connect", () => {
-//   console.log("Connected to server", socket.id);
-//   checkSocketStatus();
-// });
-
-// socket.on("disconnect", () => {
-//   console.log("Disconnected from server", socket.id);
-//   checkSocketStatus();
-// });
-
-// socket.on("reconnect_attempt", (att) => {
-//   console.log("Intentando reconectar... 🙁");
-// });
-
-// socket.on("reconnect", (att) => {
-//   console.log("!Me he vuelto a conectar! 😌");
-// });
