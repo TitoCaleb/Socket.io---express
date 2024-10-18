@@ -13,6 +13,10 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-io.on("connection", (socket) => {});
+io.on("connection", (socket) => {
+  socket.on("circle_position", (position) => {
+    socket.broadcast.emit("move_circle", position);
+  });
+});
 
 httpServer.listen(3000);
