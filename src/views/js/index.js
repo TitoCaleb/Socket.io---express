@@ -20,3 +20,18 @@ if (teachers.includes(user)) {
 socketNamespace.on("connect", () => {
   namespace.textContent = group;
 });
+
+// Lógica para enviar mensajes
+
+const send_message = document.getElementById("send_message");
+send_message.addEventListener("click", () => {
+  const message = prompt("Enter your message");
+
+  socketNamespace.emit("send_message", { user, message });
+});
+
+socketNamespace.on("message", ({ user, message }) => {
+  const li = document.createElement("li");
+  li.textContent = `${user}: ${message}`;
+  chat.appendChild(li);
+});

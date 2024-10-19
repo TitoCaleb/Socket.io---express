@@ -18,10 +18,17 @@ const students = io.of("/students");
 
 teachers.on("connection", (socket) => {
   console.log("Teacher connected", socket.id);
+
+  socket.on("send_message", (data) => {
+    teachers.emit("message", data);
+  });
 });
 
 students.on("connection", (socket) => {
   console.log("Student connected", socket.id);
+  socket.on("send_message", (data) => {
+    students.emit("message", data);
+  });
 });
 
 httpServer.listen(3000);
