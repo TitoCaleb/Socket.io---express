@@ -9,16 +9,22 @@ const io = new Server(httpServer);
 
 app.use(express.static(path.join(__dirname, "views")));
 
-const socketOnline: string[] = [];
-
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+
+  if (token === "valid") {
+    return next();
+  } else {
+    return next(new Error("invalid token"));
+  }
+});
+
 io.on("connection", (socket) => {
-  socket.on("circle_position", (position) => {
-    socket.broadcast.emit("move_circle", position);
-  });
+  console.log(socket.id);
 });
 
 httpServer.listen(3000);
