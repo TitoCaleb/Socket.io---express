@@ -1,26 +1,25 @@
-process.env.DEBUG = "socket.io:socket";
-
 import express from "express";
 import { createServer } from "http";
-import { Server } from "socket.io";
 import path from "path";
+import realtimeServer from "./realtimeServer";
+import router from "./routes";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
 
-app.use(express.static(path.join(__dirname, "views")));
+// Settings
+app.set("port", process.env.PORT || 3000);
+app.set("views", path.join(__dirname, "views"));
 
-const socketOnline: string[] = [];
+// Routes
+app.use(router);
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
+// Public
+app.use(express.static(path.join(__dirname, "public")));
+
+httpServer.listen(app.get("port"), () => {
+  console.log(`Server on port ${app.get("port")}`);
 });
 
-io.on("connection", (socket) => {
-  socket.on("circle_position", (position) => {
-    socket.broadcast.emit("move_circle", position);
-  });
-});
-
-httpServer.listen(3000);
+// Call the realtime server
+realtimeServer(httpServer);
